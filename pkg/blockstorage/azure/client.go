@@ -16,6 +16,7 @@ package azure
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2019-07-01/compute"
 	"github.com/Azure/go-autorest/autorest"
@@ -68,6 +69,7 @@ func NewClient(ctx context.Context, config map[string]string) (*Client, error) {
 	}
 
 	baseURI, ok = config[blockstorage.AzureResurceMgmtEndpoint]
+	log.Info().Print(fmt.Sprintf("BaseURI:: %s %v", baseURI, ok))
 	if !ok {
 		baseURI = compute.DefaultBaseURI
 	}
