@@ -30,6 +30,7 @@ import (
 type Client struct {
 	SubscriptionID  string
 	ResourceGroup   string
+	BaseURI         string
 	Authorizer      *autorest.BearerAuthorizer
 	DisksClient     *compute.DisksClient
 	SnapshotsClient *compute.SnapshotsClient
@@ -39,6 +40,7 @@ type Client struct {
 func NewClient(ctx context.Context, config map[string]string) (*Client, error) {
 	var resourceGroup string
 	var subscriptionID string
+	var baseURI string
 	var ok bool
 	var err error
 
@@ -65,13 +67,21 @@ func NewClient(ctx context.Context, config map[string]string) (*Client, error) {
 		return nil, err
 	}
 
+	baseURI, ok = config[blockstorage.AzureResurceMgmtEndpoint]
+	if !ok {
+		baseURI = compute.DefaultBaseURI
+	}
+
 	disksClient := compute.NewDisksClient(subscriptionID)
 	disksClient.Authorizer = authorizer
+	disksClient.BaseURI = baseURI
 
 	snapshotsClient := compute.NewSnapshotsClient(subscriptionID)
 	snapshotsClient.Authorizer = authorizer
+	snapshotsClient.BaseURI = baseURI
 
 	return &Client{
+		BaseURI:         baseURI,
 		SubscriptionID:  subscriptionID,
 		Authorizer:      authorizer,
 		DisksClient:     &disksClient,
