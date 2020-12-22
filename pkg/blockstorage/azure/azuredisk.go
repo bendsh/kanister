@@ -56,6 +56,8 @@ func (s *AdStorage) VolumeGet(ctx context.Context, id string, zone string) (*blo
 	if err != nil {
 		return nil, errors.Wrapf(err, "Failed to get info for volume with ID %s", id)
 	}
+
+	log.Info().Print(fmt.Sprintf("VolumeGet:: rg: %s, name: %s", rg, name))
 	disk, err := s.azCli.DisksClient.Get(ctx, rg, name)
 	if err != nil {
 		return nil, errors.Wrapf(err, "Failed to get volume, volumeID: %s", id)
