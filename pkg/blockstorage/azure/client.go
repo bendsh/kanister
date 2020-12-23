@@ -63,17 +63,18 @@ func NewClient(ctx context.Context, config map[string]string) (*Client, error) {
 		}
 	}
 
+	log.Info().Print(fmt.Sprintf("subscriptionID:: %s resourceGroup:: %s", subscriptionID, resourceGroup))
 	authorizer, err := getAuthorizer(azure.PublicCloud, config)
 	if err != nil {
 		return nil, err
 	}
 
 	baseURI, ok = config[blockstorage.AzureResurceMgmtEndpoint]
-	log.Info().Print(fmt.Sprintf("BaseURI:: %s %v", baseURI, ok))
 	if !ok {
 		baseURI = compute.DefaultBaseURI
 	}
 
+	log.Info().Print(fmt.Sprintf("BaseURI:: %s %v", baseURI, ok))
 	disksClient := compute.NewDisksClient(subscriptionID)
 	disksClient.Authorizer = authorizer
 	disksClient.BaseURI = baseURI
